@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purchase Order Invoice</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .table1,
+        .table2,
+        .table3 {
+            border-collapse: collapse;
+            font-size: 12px;
+            line-height: 20px;
+            border: 1px solid #000;
+            width: 100%;
+            table-layout: auto;
+        }
+
+        th {
+            padding: 1px;
+            border: 1px solid #000;
+            text-align: center;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        td {
+            padding: 1px;
+            border: 1px solid #000;
+            text-align: left;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        .center-text {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .TOD {
+            text-align: center;
+            height: 25px;
+        }
+
+        .footer-note {
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .abel-regular {
+            font-family: 'Abel', sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body>
+    <p class="center-text">Purchase Order Invoice</p>
+    <table class="table1" align="center">
+        <tr>
+            <td rowspan="1" style="width: 295px">
+                <strong>MACHINE ELEMENTS SINGRAULI (I) PVT LTD</strong><br />
+                175, WARD NO 42, MAIN RD BILAUNJI<br />
+                THANA RD, SABJEE MANDI BILAUNJI,<br />
+                VINDHYA NAGAR, SINGRAULI, MP-486889<br />
+                <strong>GSTIN/UIN:</strong> 23AARCM6303L1Z8<br />
+                <strong>State Name:</strong> Madhya Pradesh, Code: 23
+            </td>
+            <td rowspan="1" style="width: 168px; text-align: left; vertical-align: middle">
+                <strong>Invoice No:</strong><br />
+                {{invoiceNumber}}
+            </td>
+            <td rowspan="1" style="width: 190px; text-align: left; vertical-align: middle">
+                <strong>Dated:</strong><br />{{currentDate}}
+            </td>
+        </tr>
+        {{#each authUsers}}
+        <tr>
+            <td rowspan="1">
+                <strong>Consignee (Ship to):</strong><br />
+                <strong>Organization Name: </strong>{{this.organization}}<br />
+                <strong>Vendor Name: </strong>{{this.name}}<br />
+                <strong>Address:</strong><br />
+                {{this.shippingAddress}}<br />
+                <strong>State Name: </strong> {{this.shippingState}}, Pincode:
+                {{this.authUsers.shippingStateCode}}<br />
+                <strong>GSTIN: </strong>{{this.gstNo}}
+            </td>
+            <td rowspan="1" colspan="2">
+                <strong>Buyer (Bill to):</strong><br />
+                <strong>Organization Name: </strong>{{this.organization}}<br />
+                <strong>Vendor Name: </strong>{{this.name}}<br />
+                <strong>Address:</strong><br />
+                {{this.billingAddress}}<br />
+                <strong>State Name: </strong> {{this.billingState}}, Pincode: {{this.billingStateCode}} <br />
+                <strong>GSTIN: </strong>{{this.gstNo}}
+            </td><br />
+
+        </tr>
+        {{/each}}
+        <tr>
+            <td colspan="3" rowspan="2" class="TOD">Terms of Delivery</td>
+        </tr>
+    </table>
+    <table class="table2" align="center">
+        <tr>
+            <th style="width: 25px">Sr No.</th>
+            <th style="width: 350px">Product code</th>
+            <th style="width: 30px">GST Rate</th>
+            <th style="width: 55px">Quantity</th>
+            <th>Rate</th>
+            <th style="width: 98px">Amount</th>
+        </tr>
+        {{#each authUsers}}
+        {{#each productItems}}
+        <tr>
+            <td>{{add @index 1}}</td>
+            <td>{{this.productCode}}</td>
+            <td>{{this.gstLabel}}</td>
+            <td>{{this.quantity}}</td>
+            <td>₹{{this.rate}}</td>
+            <td>₹{{this.totalAmount}}</td>
+        </tr>
+        {{/each}}
+        {{/each}}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><strong>₹{{this.finalAmount}}</strong></td>
+        </tr>
+    </table>
+
+    <table class="table3" align="center">
+        <!-- Table for CGST + SGST -->
+        {{#each authUsers}}
+        {{#if this.isApply}}
+        <tr>
+            <th class="total-end" style="width: 100px; vertical-align: bottom;" rowspan="{{this.resultLength}}">Total
+            </th>
+            <th style="width: 200px">Taxable Value</th>
+            <th colspan="2">CGST</th>
+            <th colspan="2">SGST</th>
+            <th style="width: 150px">Total</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th style="width: 150px">Rate</th>
+            <th style="width: 150px">Amount</th>
+            <th style="width: 150px">Rate</th>
+            <th style="width: 150px">Amount</th>
+            <th>Tax Amount</th>
+        </tr>
+
+        {{else}}
+        <!-- Table for IGST -->
+        <tr></tr>
+        <th class="total-end" style="width: 100px; vertical-align: bottom;" rowspan="{{this.resultLength}}">Total</th>
+        <th style="width: 200px">Taxable Value</th>
+        <th style="width: 300px; text-align: center;" colspan="2">IGST</th>
+        <th style="width: 150px">Total</th>
+        </tr>
+        <tr>
+            <th style="width: 150px">Rate</th>
+            <th style="width: 150px">Tax</th>
+            <th style="width: 150px">Amount</th>
+            <th>Tax Amount</th>
+        </tr>
+
+        {{/if}}
+        {{/each}}
+
+        {{#each authUsers}}
+        {{#each result}}
+        {{#if this.isIntra}}
+        <tr>
+            <td>₹{{this.rate}}</td>
+            <td>{{this.tex}}%</td>
+            <td>₹{{this.afterTex}}</td>
+            <td>{{this.tex}}%</td>
+            <td>₹{{this.afterTex}}</td>
+            <td>₹{{this.finalAmount}}</td>
+        </tr>
+        {{else}}
+        <tr>
+            <td>₹{{this.rate}}</td>
+            <td>{{this.tex}}%</td>
+            <td>₹{{this.afterTex}}</td>
+            <td>₹{{this.finalAmount}}</td>
+        </tr>
+        {{/if}}
+        {{/each}}
+        {{/each}}
+
+        {{#each authUsers}}
+        {{#if this.isApply}}
+        <tr>
+            <td><strong>₹{{this.finalTotalValue.rateTotal}}</strong></td>
+            <td></td>
+            <td><strong>₹{{ this.finalTotalValue.halfAfterTexTotal}}</strong></td>
+            <td></td>
+            <td><strong>₹{{this.finalTotalValue.halfAfterTexTotal}}</strong></td>
+            <td><strong>₹{{this.finalTotalValue.finalAmountTotal}}</strong></td>
+        </tr>
+
+        {{else}}
+        <tr>
+            <td><strong>₹{{this.finalTotalValue.rateTotal}}</strong></td>
+            <td></td>
+            <td><strong>₹{{this.finalTotalValue.afterTexTotal}}</strong></td>
+            <td><strong>₹{{this.finalTotalValue.finalAmountTotal}}</strong></td>
+        </tr>
+
+        {{/if}}
+        {{/each}}
+    </table>
+
+    <table class="table3" align="center">
+        <tr>
+            <td colspan="2" style="height: 10px"></td>
+        </tr>
+        <tr>
+            <td style="width: 320px; height: 1rem;">Amount (in words):</td>
+            <td style="width: 336px;">
+                <strong>INR {{totalAmountInWords}}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="2" style="height: 3rem;">Customer's Seal and Signature</td>
+            <td rowspan="2" class="right-align">
+                <strong>for MACHINE ELEMENTS SINGRAULI (I) PVT LTD</strong>
+            </td>
+        </tr>
+    </table>
+
+    <div class="footer-note">
+        <p>SUBJECT TO SINGRAULI JURISDICTION</p>
+        <p>This is a Computer Generated Invoice</p>
+    </div>
+</body>
+
+</html>

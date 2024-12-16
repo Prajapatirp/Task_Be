@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tax Invoice</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .table1,
+        .table2,
+        .table3 {
+            border-collapse: collapse;
+            font-size: 12px;
+            line-height: 20px;
+            border: 1px solid #000;
+            width: 650px;
+            table-layout: auto;
+        }
+
+        th,
+        td {
+            padding: 1px;
+            border: 1px solid #000;
+            text-align: left;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        .center-text {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            word-wrap: break-word;
+        }
+
+        .TOD {
+            text-align: center;
+            font-size: 20px;
+            line-height: 1.2;
+            padding: 0px 0;
+            border: none;
+            background-color: #f0f0f0;
+            /* Light gray background */
+        }
+
+        .border-box {
+            border: 1px solid #000;
+            padding: 0px;
+        }
+
+        .footer-note {
+            font-size: 10px;
+            text-align: center;
+        }
+
+        .large-font {
+            font-size: 14px;
+            /* Adjust size as needed */
+            font-weight: bold;
+            /* Keep it bold */
+        }
+
+        .no-border {
+            border: none;
+        }
+
+        .info-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .info {
+            width: 45%;
+        }
+
+        .light-gray {
+            background-color: #f0f0f0;
+            /* Light gray background */
+        }
+    </style>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+</head>
+
+<body>
+    <p class="center-text">GRN RECEIPT</p>
+    <table class="table1" align="center">
+        <tr>
+            {{#each authUsers}}
+        <tr>
+            <td colspan="2" class="no-border">
+                <div class="info-container">
+                    <div class="info">
+                        <strong class="large-font">Company Details:</strong><br />
+                        <strong class="large-font">MACHINE ELEMENTS</strong><br />
+                        PLOT NO. 76 , INDUSTRIAL AREA WAIDHAN<br />
+                        UDYOG DEEP WAIDHAN , PHASE-2 , VINDHYA NAGAR<br />
+                        SINGRAULI , MADHYA-PRADESH,<br />
+                        PIN-486886<br />
+                    </div>
+                    <div class="info">
+                        <strong class="large-font">Vendor Details:</strong><br />
+                        <strong class="large-font">{{this.name}}</strong><br />
+                        {{this.userState}}<br />
+                        {{this.userCountry}}<br />
+                        {{this.contactNo}}<br />
+                        {{this.email}}<br />
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+        </tr>
+        <tr>
+            <td colspan="2" class="TOD light-gray">
+                <div class="border-box">GRN RECEIPT</div>
+            </td>
+        </tr>
+    </table>
+    <table class="table1" align="center">
+        <tr>
+            <td colspan="2" class="no-border">
+                <div class="info-container">
+                    <div class="info">
+                        <strong class="large-font">Purchase Order Details</strong><br />
+                        <div class="date-details">
+                            <strong>GRN Date</strong> <span><strong>:</strong>{{currentDate}}</span><br />
+                            <strong>Order Date</strong> <span><strong>:</strong>{{orderDate}}</span><br />
+                            <strong>Expected Delivery Date</strong>
+                            <span><strong>:</strong>{{deliveryDate}}</span><br />
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                &nbsp;
+            </td>
+        </tr>
+    </table>
+
+    <table class="table2" align="center">
+        <tr class="light-gray">
+            <th style="width: 25px;  text-align: center">Sr No.</th>
+            <th style="width: 350px;  text-align: center">Product code</th>
+            <th style=" text-align: center">Received Quantity</th>
+            <th style=" text-align: center">Pending Quantity</th>
+            <th style=" text-align: center">Rate</th>
+            <th style="width: 30px;  text-align: center">Tax</th>
+            <th style="width: 98px;  text-align: center">Amount</th>
+        </tr>
+        {{#each authUsers}}
+        {{#each productItems}}
+        <tr>
+            <td>{{add @index 1}}</td>
+            <td>{{this.productCode}}</td>
+            <td>{{this.receivedQuantity}}</td>
+            <td>{{this.pendingQuantity}}</td>
+            <td>₹{{this.rate}}</td>
+            <td>{{this.gstLabel}}</td>
+            <td>₹{{this.totalAmount}}</td>
+        </tr>
+        {{/each}}
+        {{/each}}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>₹{{finalAmount}}</td>
+        </tr>
+    </table>
+
+    <table class="table3" align="center">
+        <tr>
+            <td style="width: 1620px"> <strong>Amount (in words): </strong><br>
+                {{totalAmountInWords}}
+            </td>
+            <td style="width: 336px">
+                <strong>Total: </strong>
+                <br>
+                ₹{{finalAmount}}
+            </td>
+        </tr>
+        <tr>
+            <td style="height: 50px"></td>
+            <td rowspan="2" class="right-align">
+                <strong>Authorized Signature</strong>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
